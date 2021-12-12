@@ -205,6 +205,14 @@ while dVm > 0
 
     du = a*c + D*dx;
     un = u + du;
+
+    if ~all(un <S.ub)
+        un = S.ub;
+        du = un - u;
+    elseif ~all(un > S.lb)
+        un = S.lb;
+        du = un - u;
+    end
     
     [Ln, Lx, Lxx, Lu, Luu] = S.L(k, xn, un, S);
     
@@ -273,10 +281,10 @@ Em = eye(m);
 A = zeros(n, n);
 B = zeros(n, m);
 
-for j=1:n
+for j=1:n,
   A(:,j) = (func(k, x + e*En(:,j), u, S) - f)/e;
 end
 
-for j=1:m
+for j=1:m,
   B(:,j) = (func(k, x, u + e*Em(:,j), S) - f)/e;
 end
